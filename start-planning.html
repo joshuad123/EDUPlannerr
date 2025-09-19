@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edu Planner – Start Planning</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://unpkg.com/feather-icons"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://wallpapers.com/images/high/grey-background-yig5bjci88m6o61k.webp') no-repeat center center fixed;
+      background-size: cover;
+      color: #f0f0f0;
+    }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    .glass { background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); border-radius: 12px; }
+    input, textarea { background-color: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 6px; padding: 0.5rem; width: 100%; }
+    input::placeholder, textarea::placeholder { color: #ccc; }
+    .card { transition: transform 0.3s ease; }
+    .card:hover { transform: scale(1.02); }
+    .hidden-btn { position: fixed; bottom: 8px; right: 8px; font-size: 10px; opacity: 0.1; }
+    #nameModal { backdrop-filter: blur(12px); background-color: rgba(0, 0, 0, 0.7); }
+  </style>
+</head>
+<body>
+
+<!-- Developer Reset Button -->
+<button onclick="resetSite()" class="hidden-btn text-white">Reset</button>
+
+<!-- Header -->
+<header class="bg-black bg-opacity-70 py-4 px-6 shadow-md sticky top-0 z-50 flex justify-between items-center">
+  <h1 class="text-2xl font-bold">Edu Planner</h1>
+  <div class="flex items-center space-x-4">
+    <div id="userNameDisplay" class="text-sm text-gray-300"></div>
+    <button onclick="logout()" class="text-sm px-3 py-1 rounded border border-white hover:bg-white hover:text-black transition">Logout</button>
+  </div>
+</header>
+
+<!-- Responsive Wrapper -->
+<div class="p-4 sm:p-6 md:p-10 max-w-screen-xl mx-auto">
+
+  <!-- Modal for Name Input -->
+  <div id="nameModal" class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="glass p-8 w-80 text-center text-white">
+      <h2 class="text-xl font-semibold mb-4">Enter Your Name</h2>
+      <input type="text" id="userNameInput" placeholder="Your name..." class="mb-4">
+      <button onclick="saveName()" class="bg-white text-black px-4 py-2 rounded hover:bg-gray-300">Start</button>
+    </div>
+  </div>
+
+  <!-- Hero Section with Glass Effect -->
+  <section class="flex justify-center items-center py-10">
+    <div class="glass p-6 rounded-lg text-center max-w-xl w-full">
+      <h2 class="text-4xl font-bold mb-2">Start Planning Now</h2>
+      <p class="text-gray-300">Manage your schedule and assignments efficiently.</p>
+    </div>
+  </section>
+
+  <!-- Timetable -->
+  <section class="glass max-w-6xl mx-auto p-6 mb-12">
+    <h3 class="text-2xl font-bold mb-4">📅 Timetable Editor</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-center mb-4 text-white">
+        <thead>
+          <tr>
+            <th>Time</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="timetableBody"></tbody>
+      </table>
+    </div>
+    <button onclick="addTimetableRow()" class="bg-white text-black px-3 py-1 rounded hover:bg-gray-300">Add Row</button>
+  </section>
+
+  <!-- Assignments -->
+  <section class="glass max-w-6xl mx-auto p-6 mb-12">
+    <h3 class="text-2xl font-bold mb-4">📌 Assignments</h3>
+    <form onsubmit="addAssignment(event)" class="grid gap-4 md:grid-cols-3 mb-6">
+      <input type="text" id="assignmentTitle" placeholder="Title" required />
+      <input type="text" id="assignmentDesc" placeholder="Description" />
+      <input type="date" id="assignmentDate" required />
+      <button class="bg-white text-black px-4 py-2 rounded hover:bg-gray-300 md:col-span-3">Add Assignment</button>
+    </form>
+    <button onclick="toggleOverdueFilter()" class="bg-white text-black px-3 py-1 rounded mb-4 hover:bg-gray-300">Show Overdue Only</button>
+    <div id="assignmentList" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer class="text-center py-6 text-gray-400">
+  <p>&copy; Edu Planner. Made by Joshua and Shahid</p>
+</footer>
+
+<!-- Firebase & Scripts -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAjEblHeEEcb44lP42Qb7Qq9xAzSggZf2A",
+    authDomain: "eduuplanner.firebaseapp.com",
+    projectId: "eduuplanner",
+    storageBucket: "eduuplanner.firebasestorage.app",
+    messagingSenderId: "124629391317",
+    appId: "1:124629391317:web:2118b3f072f1c0557a4f5c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const nameModal = document.getElementById('nameModal');
+  const userNameDisplay = document.getElementById('userNameDisplay');
+  const timetableBody = document.getElementById('timetableBody');
+  const assignmentList = document.getElementById('assignmentList');
+  let showOverdueOnly = false;
+  let currentUID = null;
+
+  // ✅ Auth Protection
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      currentUID = user.uid;
+      loadName();
+      loadTimetable();
+      loadAssignments();
+    }
+  });
+
+  // ✅ Logout
+  async function logout() {
+    await signOut(auth);
+    window.location.href = "login.html";
+  }
+  window.logout = logout;
+
+  // ✅ Name
+  async function saveName() {
+    const name = document.getElementById('userNameInput').value;
+    if (name && currentUID) {
+      await setDoc(doc(db, "users", currentUID), { name }, { merge: true });
+      nameModal.style.display = 'none';
+      userNameDisplay.innerText = `${name}'s Workspace`;
+    }
+  }
+  window.saveName = saveName;
+
+  async function loadName() {
+    const snap = await getDoc(doc(db, "users", currentUID));
+    if (snap.exists() && snap.data().name) {
+      userNameDisplay.innerText = `${snap.data().name}'s Workspace`;
+      nameModal.style.display = 'none';
+    }
+  }
+
+  // ✅ Timetable
+  function addTimetableRow(data = {}, id = null) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="time" value="${data.time || ''}" class="text-black"/></td>
+      ${['mon','tue','wed','thu','fri'].map(day => `<td><input value="${data[day] || ''}" class="text-black"/></td>`).join('')}
+      <td><button onclick="deleteTimetable('${id}')" class="text-sm text-red-300 hover:underline">Remove</button></td>
+    `;
+    timetableBody.appendChild(tr);
+
+    // Auto-save on change
+    tr.querySelectorAll('input').forEach(input => {
+      input.addEventListener('change', async () => {
+        if (id) {
+          await updateDoc(doc(db, "users", currentUID, "timetable", id), {
+            time: tr.querySelectorAll('input')[0].value,
+            mon: tr.querySelectorAll('input')[1].value,
+            tue: tr.querySelectorAll('input')[2].value,
+            wed: tr.querySelectorAll('input')[3].value,
+            thu: tr.querySelectorAll('input')[4].value,
+            fri: tr.querySelectorAll('input')[5].value
+          });
+        } else {
+          await addDoc(collection(db, "users", currentUID, "timetable"), {
+            time: tr.querySelectorAll('input')[0].value,
+            mon: tr.querySelectorAll('input')[1].value,
+            tue: tr.querySelectorAll('input')[2].value,
+            wed: tr.querySelectorAll('input')[3].value,
+            thu: tr.querySelectorAll('input')[4].value,
+            fri: tr.querySelectorAll('input')[5].value
+          });
+        }
+      });
+    });
+  }
+  window.addTimetableRow = () => addTimetableRow();
+
+  async function deleteTimetable(id) {
+    if (id) await deleteDoc(doc(db, "users", currentUID, "timetable", id));
+  }
+  window.deleteTimetable = deleteTimetable;
+
+  function loadTimetable() {
+    onSnapshot(collection(db, "users", currentUID, "timetable"), (snapshot) => {
+      timetableBody.innerHTML = "";
+      snapshot.forEach(docSnap => addTimetableRow(docSnap.data(), docSnap.id));
+    });
+  }
+
+  // ✅ Assignments
+  async function addAssignment(e) {
+    e.preventDefault();
+    const title = document.getElementById('assignmentTitle').value;
+    const desc = document.getElementById('assignmentDesc').value;
+    const date = document.getElementById('assignmentDate').value;
+    await addDoc(collection(db, "users", currentUID, "assignments"), { title, desc, date, complete: false });
+    e.target.reset();
+  }
+  window.addAssignment = addAssignment;
+
+  async function toggleComplete(id, complete) {
+    await updateDoc(doc(db, "users", currentUID, "assignments", id), { complete: !complete });
+  }
+  window.toggleComplete = toggleComplete;
+
+  function toggleOverdueFilter() {
+    showOverdueOnly = !showOverdueOnly;
+    loadAssignments();
+  }
+  window.toggleOverdueFilter = toggleOverdueFilter;
+
+  function loadAssignments() {
+    onSnapshot(collection(db, "users", currentUID, "assignments"), (snapshot) => {
+      assignmentList.innerHTML = '';
+      const today = new Date().toISOString().split("T")[0];
+      snapshot.forEach(docSnap => {
+        const a = docSnap.data();
+        const id = docSnap.id;
+        const isOverdue = !a.complete && a.date < today;
+        let borderColor = 'border-yellow-400';
+        if (a.complete) borderColor = 'border-green-500';
+        else if (isOverdue) borderColor = 'border-red-500';
+        if (!showOverdueOnly || isOverdue) {
+          assignmentList.innerHTML += `
+            <div class="glass p-4 rounded card border ${borderColor}">
+              <h4 class="text-lg font-bold mb-1">${a.title}</h4>
+              <p class="text-sm mb-2">${a.desc}</p>
+              <p class="text-sm mb-2">Due: ${a.date} ${isOverdue ? '<span class="text-red-400 font-semibold">– Due!</span>' : ''}</p>
+              <button onclick="toggleComplete('${id}', ${a.complete})" class="bg-white text-black text-sm px-2 py-1 rounded hover:bg-gray-300">
+                ${a.complete ? '✓ Completed' : 'Mark Complete'}
+              </button>
+            </div>`;
+        }
+      });
+    });
+  }
+
+  // ✅ Reset = delete all user docs
+  async function resetSite() {
+    // Clears assignments & timetable
+    const timetableSnap = await getDoc(collection(db, "users", currentUID, "timetable"));
+    timetableSnap.forEach(docSnap => deleteDoc(docSnap.ref));
+    const assignmentSnap = await getDoc(collection(db, "users", currentUID, "assignments"));
+    assignmentSnap.forEach(docSnap => deleteDoc(docSnap.ref));
+    location.reload();
+  }
+  window.resetSite = resetSite;
+</script>
+
+</body>
+</html>

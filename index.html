@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edu Planner</title>
+
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Playfair Display', serif;
+    }
+    .feature-card:hover {
+      transform: scale(1.05);
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+  </style>
+</head>
+
+<body class="text-gray-900" style="background-image: url('https://wallpapers.com/images/high/grey-background-yig5bjci88m6o61k.webp'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
+
+  <!-- Navbar -->
+  <header class="bg-black bg-opacity-80 text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-screen-xl mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-extrabold tracking-wide">Edu Planner</h1>
+      <nav class="hidden md:flex space-x-3 items-center">
+        <a href="#" class="px-4 py-2 text-lg font-semibold border border-transparent rounded-md hover:bg-white hover:text-black transition">Home</a>
+        <a href="#features" class="px-4 py-2 text-lg font-semibold border border-transparent rounded-md hover:bg-white hover:text-black transition">Features</a>
+        <a href="#how" class="px-4 py-2 text-lg font-semibold border border-transparent rounded-md hover:bg-white hover:text-black transition">How It Works</a>
+        <a href="#testimonials" class="px-4 py-2 text-lg font-semibold border border-transparent rounded-md hover:bg-white hover:text-black transition">Testimonials</a>
+        <a href="#faq" class="px-4 py-2 text-lg font-semibold border border-transparent rounded-md hover:bg-white hover:text-black transition">FAQs</a>
+        <a href="#contact" class="px-4 py-2 text-lg font-semibold bg-white text-black rounded-full hover:bg-gray-200 transition">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="bg-white bg-opacity-60 py-20">
+    <div class="max-w-screen-xl mx-auto text-center px-4 sm:px-6 md:px-10">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-6">Plan Your Academic Success</h2>
+      <p class="text-base sm:text-lg text-gray-700 mb-8 max-w-2xl mx-auto">Your all-in-one solution to organize study schedules, set goals, track assignments, and never miss a deadline again.</p>
+      
+      <!-- Login & Signup buttons (responsive layout) -->
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="login.html" class="px-6 py-3 sm:px-8 sm:py-3 text-lg font-semibold border border-black text-black rounded-full hover:bg-black hover:text-white transition">Login</a>
+        <a href="signup.html" class="px-6 py-3 sm:px-8 sm:py-3 text-lg font-semibold border border-black text-black rounded-full hover:bg-black hover:text-white transition">Signup</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-20 bg-white bg-opacity-60">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-10 text-center">
+      <h3 class="text-3xl sm:text-4xl font-semibold mb-14">Why Edu Planner?</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 text-left">
+        <div class="feature-card bg-gray-50 bg-opacity-70 p-6 rounded-xl shadow hover:shadow-lg transition">
+          <div class="mb-4 text-gray-800"><i data-feather="calendar" class="w-8 h-8"></i></div>
+          <h4 class="text-xl font-bold mb-2">Custom Timetables</h4>
+          <p class="text-gray-600">Easily create and personalize your weekly schedules to match your learning rhythm.</p>
+        </div>
+        <div class="feature-card bg-gray-50 bg-opacity-70 p-6 rounded-xl shadow hover:shadow-lg transition">
+          <div class="mb-4 text-gray-800"><i data-feather="check-square" class="w-8 h-8"></i></div>
+          <h4 class="text-xl font-bold mb-2">Assignment Tracker</h4>
+          <p class="text-gray-600">Keep track of all your tasks, projects, and submission deadlines in one place.</p>
+        </div>
+        <div class="feature-card bg-gray-50 bg-opacity-70 p-6 rounded-xl shadow hover:shadow-lg transition">
+          <div class="mb-4 text-gray-800"><i data-feather="bar-chart-2" class="w-8 h-8"></i></div>
+          <h4 class="text-xl font-bold mb-2">Progress Dashboard</h4>
+          <p class="text-gray-600">Visual analytics to help you measure progress and stay motivated over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how" class="py-20 bg-white bg-opacity-50">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-10 text-center">
+      <h3 class="text-3xl sm:text-4xl font-semibold mb-14">How It Works</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 text-left">
+        <div class="p-6 bg-white bg-opacity-70 rounded-xl shadow">
+          <h4 class="text-xl font-bold mb-2">Step 1: Open the Website</h4>
+          <p class="text-gray-700">Open the website through the url to explore the planner..</p>
+        </div>
+        <div class="p-6 bg-white bg-opacity-70 rounded-xl shadow">
+          <h4 class="text-xl font-bold mb-2">Step 2: Add Tasks</h4>
+          <p class="text-gray-700">Input assignments, exams, and goals to track your journey.</p>
+        </div>
+        <div class="p-6 bg-white bg-opacity-70 rounded-xl shadow">
+          <h4 class="text-xl font-bold mb-2">Step 3: Stay on Track</h4>
+          <p class="text-gray-700">Use your dashboard to monitor progress and manage time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="py-20 bg-white bg-opacity-60">
+    <div class="max-w-screen-lg mx-auto px-4 sm:px-6 md:px-10 text-center">
+      <h3 class="text-3xl sm:text-4xl font-semibold mb-10">What Students Say</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+        <div class="bg-white bg-opacity-80 p-6 rounded-xl shadow">
+          <p class="text-gray-800 italic">"Edu Planner helped me organize my assignments like never before. I finally stopped missing deadlines!"</p>
+          <p class="text-sm font-medium mt-4">— Aanya, Grade 10</p>
+        </div>
+        <div class="bg-white bg-opacity-80 p-6 rounded-xl shadow">
+          <p class="text-gray-800 italic">"My grades improved once I started using the dashboard daily. The visuals really help."</p>
+          <p class="text-sm font-medium mt-4">— Karan, Class 12</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-20 bg-white bg-opacity-50">
+    <div class="max-w-screen-md mx-auto px-4 sm:px-6 md:px-10">
+      <h3 class="text-3xl font-semibold mb-8 text-center">Frequently Asked Questions</h3>
+      <div class="space-y-6">
+        <div>
+          <h4 class="text-lg font-bold">Is Edu Planner free to use?</h4>
+          <p class="text-gray-700">Yes! Edu Planner is completely free for students and teachers.</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold">Can I access it on mobile?</h4>
+          <p class="text-gray-700">Absolutely. Edu Planner is responsive and works on all devices.</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold">Is it easy to use</h4>
+          <p class="text-gray-700">It is really Easy and simple to use and user friendly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="bg-white bg-opacity-60 py-20">
+    <div class="max-w-screen-md mx-auto px-4 sm:px-6 md:px-10 text-center">
+      <h3 class="text-3xl font-semibold mb-6">Let’s Connect</h3>
+      <p class="text-gray-700 mb-4">Have questions or suggestions? We’d love to hear from you.</p>
+      <a href="mailto:support@eduplanner.com" class="inline-block text-black font-medium hover:underline">support@eduplanner.com</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-black bg-opacity-80 text-white py-6">
+    <div class="text-center text-sm px-4">
+      <p>&copy; Edu Planner. Made by Joshua and Shahid</p>
+    </div>
+  </footer>
+
+  <!-- Feather Icons -->
+  <script>
+    feather.replace();
+  </script>
+</body>
+</html>

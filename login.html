@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – EduPlanner</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen flex items-center justify-center bg-black text-white font-sans relative overflow-hidden">
+
+  <!-- Background image with overlay -->
+  <div class="absolute inset-0">
+    <img src="https://wallpapers.com/images/high/grey-background-yig5bjci88m6o61k.webp" class="w-full h-full object-cover opacity-20" />
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+  </div>
+
+  <!-- Login box -->
+  <div class="relative z-10 bg-white bg-opacity-5 backdrop-blur-lg border border-gray-500 border-opacity-20 p-8 rounded-2xl shadow-2xl w-[90%] max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-center text-white tracking-wide">Welcome Back to EduPlanner</h2>
+
+    <input type="email" id="login-email" placeholder="Email"
+      class="w-full mb-4 px-5 py-3 rounded-xl bg-white bg-opacity-10 text-white placeholder-gray-300 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-white transition"/>
+
+    <input type="password" id="login-password" placeholder="Password"
+      class="w-full mb-6 px-5 py-3 rounded-xl bg-white bg-opacity-10 text-white placeholder-gray-300 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-white transition"/>
+
+    <button id="login-btn"
+      class="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-gray-200 transition">
+      Login
+    </button>
+
+    <p class="text-sm text-center mt-4 text-gray-300">Don't have an account? 
+      <a href="signup.html" class="underline hover:text-white">Sign Up</a>
+    </p>
+
+    <p id="login-error" class="text-red-400 text-sm mt-3 text-center"></p>
+  </div>
+
+  <!-- Firebase Auth -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      setPersistence, 
+      browserLocalPersistence, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAjEblHeEEcb44lP42Qb7Qq9xAzSggZf2A",
+      authDomain: "eduuplanner.firebaseapp.com",
+      projectId: "eduuplanner",
+      storageBucket: "eduuplanner.firebasestorage.app",
+      messagingSenderId: "124629391317",
+      appId: "1:124629391317:web:2118b3f072f1c0557a4f5c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // ✅ Keep user logged in
+    setPersistence(auth, browserLocalPersistence);
+
+    // ✅ If already signed in, redirect
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "start-planning.html";
+      }
+    });
+
+    // ✅ Handle login
+    document.getElementById("login-btn").addEventListener("click", async () => {
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+      const errorDisplay = document.getElementById("login-error");
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "start-planning.html"; // ✅ redirect after login
+      } catch (error) {
+        errorDisplay.textContent = error.message;
+      }
+    });
+  </script>
+</body>
+</html>
